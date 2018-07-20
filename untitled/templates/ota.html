@@ -1,0 +1,151 @@
+{% extends "bootstrap/base.html" %}
+
+{% block title %}Flasky{% endblock %}
+
+{% block navbar %}
+<div class="navbar navbar-inverse" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            {% if user %}
+            <a class="navbar-brand" href="/">{{ user }}{{ password }}</a>
+            {% endif %}
+        </div>
+
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li><a href="/">Home</a></li>
+            </ul>
+            {% if username %}
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+    <div>
+<div style="float:left;margin-left: 30px">
+<form id="loginForm">
+    	<table style="border-collapse:separate; border-spacing:0px 10px;" >
+    	<tr>
+                <td>请求url：</td>
+        </tr>
+            <tr>
+                <td>
+                	<input style="margin: 0px; width: 393px; height: 30px "type="text" id="url" name="url" placeholder="请求url">
+                </td>
+        </tr>
+            <tr>
+
+                <td>请求header信息:</td>
+                 <tr>
+
+                <td><textarea  style="margin: 0px; width: 393px; height: 245px " id="header" name="header" placeholder="请求header信息" autocomplete="off" ></textarea></td>
+                 </tr>
+            <tr>
+                <td>请求参数：</td>
+            </tr>
+            <tr>
+                <td><textarea  style="margin: 0px; width: 393px; height: 245px " id="data" name="data" placeholder="请求参数" autocomplete="off" ></textarea></td>
+            </tr>
+            <tr>
+
+                <td>请求方式:
+                    <input  type="radio" name="PostType" value="POST">POST
+                     <input  style="margin-left: 10px" type="radio" name="PostType" value="GET">GET
+                    <input class="btn btn-default" type="reset" name="resert" value="重置">
+                </td>
+            </tr>
+    	</table>
+
+</form>
+
+                     <button style="margin-left: 10px" class="btn btn-default" id="test1"  value="提交">提交 </button>
+
+
+</div>
+    <div style="float:left;margin-left: 20px">
+     <form id="loginForm">
+    	<table style="border-collapse:separate; border-spacing:0px 10px;" >
+    	<tr>
+                <td>请求响应结果：</td>
+        </tr>
+            <tr>
+                <td><textarea   id="respones" cols="30" rows="5" readonly="readonly" style="margin: 0px; height: 318px; width: 403px;"></textarea>
+                </td>
+        </tr>
+
+    	</table>
+
+     </form></div>
+{% endblock %}
+
+
+    {% block scripts %}
+    <script src="{{url_for('static', filename='jq.js')}}"></script>
+    <script type="text/javascript">
+        $(function () {
+            jsondata={
+                            "reqType":0,
+                            "perception": {
+                                "inputText": {
+                                    "text": "附近的酒店"
+                                },
+                                "inputImage": {
+                                    "url": "imageUrl"
+                                },
+                                "selfInfo": {
+                                    "location": {
+                                        "city": "北京",
+                                        "province": "北京",
+                                        "street": "信息路"
+                                    }
+                                }
+                            },
+                            "userInfo": {
+                                "apiKey": "",
+                                "userId": ""
+                            }
+                        };
+            $("#url").val("http://openapi.tuling123.com/openapi/api/v2");
+            $("#data").val(JSON.stringify(jsondata));
+
+
+
+            $("#test1").click(function () {
+                alert("123");
+                var url=$("#url").val();
+                var dataval=$("#data").val();
+                if(url=="" ||dataval=="") {
+                        alert("请求url/请求参数不能为空");
+                }
+                else {
+                var data = $("#loginForm").serializeArray(); //自动将form表单封装成json
+                var data2=$("input:checked");
+                alert("456");
+                $.ajax({
+                    type: "Post",   //访问WebService使用Post方式请求contentType: "application/json", //WebService 会返回Json类型
+                    url: "{{url_for('POST')}}", //调用WebService的地址和方法名称组合 ---- WsURL/方法名
+                    //dataType: 'json',
+                    data: { mallInstitution: JSON.stringify(data) },
+                    success : function(result) {//返回成功以后需要的回调函数
+
+                        $("#respones").text(JSON.stringify(result));
+                      alert(JSON.stringify(result));
+                        },
+                    error : function(result) {//返回成功以后需要的回调函数
+                      alert("8989")
+                        }
+                });
+                    }
+            });
+            })
+
+    </script>
+    {%endblock %}

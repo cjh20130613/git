@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link href="http://cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href={{ url_for("static",filename="css/htmleaf-demo.css") }}>
+	<link rel="stylesheet" href={{ url_for("static",filename="css/signin.css")}}>
+    <script src="{{url_for('static', filename='jq.js')}}"></script>
+
+    <script type="text/javascript">
+        $(function () {
+         $("#submit").click(function () {
+            var username=$("#username").val();
+            var password=$("#password").val();
+            if(password==""||username==""){
+                 alert("不能为空");
+
+            }else {
+                data={username:username,password:password};
+                    console.info(data);
+                    $.ajax({
+                        type:"POST",
+                        url:"{{ url_for("logincommit")}}",
+                        data:{data: JSON.stringify(data) },
+                        success:function (result) {
+                            alert(result);
+                            if(result=2000){
+                            window.location.href ='{{ url_for("ota") }}';}
+                              if(result=2000){
+                            window.location.href ='{{ url_for("ota") }}';}
+                        },
+                        errer:function () {
+                            alert("提交失败");
+                        }
+         });}
+        });})
+    </script>
+</head>
+<body>
+	<div class="htmleaf-container">
+		<div class="signin">
+			<div class="signin-head"><img src={{ url_for("static",filename="images/test/head_120.png")}}  class="img-circle"></div>
+			<form class="form-signin" role="form">
+				<input type="text" class="form-control" id="username"  placeholder="用户名" required autofocus />
+				<input type="password" class="form-control" id="password" placeholder="密码" required />
+				<button class="btn btn-lg btn-info btn-block" id="submit">登录</button>
+				<label class="checkbox">
+					<input style="margin-left: 10px;margin: 2px" type="checkbox" value="remember-me">
+                    <span style="margin-left: 17px" class="label label-success">记住我</span>
+				<a   style="margin-left: 175px" class="a" href={{ url_for("register") }}>
+                    <span  class="label label-success">&nbsp&nbsp注册&nbsp&nbsp</span>
+                </a>
+
+                </label>
+			</form>
+		</div>
+	</div>
+
+</body>
+</html>

@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link href="http://cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+{#	<link rel="stylesheet" type="text/css" href={{ url_for("static",filename="css/htmleaf-demo.css") }}>#}
+{#	<link rel="stylesheet" href={{ url_for("static",filename="css/signin.css")}}>#}
+    <script src="{{url_for('static', filename='jq.js')}}"></script>
+
+    <script type="text/javascript">
+           function  datadata(type) {
+                var  urldata=[];
+                var  header= [];
+                var  url="";
+                var flageUrl=0;
+                var flagedata=0;
+
+                if($("#url").val()==""){
+                    alert("请求URL不能为空");
+                    $("#url").css("border-color", "red");
+                }else {url=$("#url").val();flageUrl=1}
+
+                $("table#header tbody  ").find("tr").each(function () {
+                     var td = $(this).find("input");
+                    if(td.eq(0).val()!="" &&td.eq(1).val()=="") {
+                            alert("header参数KEY/VALUE必须同时为空或不为空");
+    {#                        td.eq(1).css("border","1px solid orange");#}
+                            td.eq(1).css("border-color", "red");
+
+                        }
+                        if(td.eq(0).val()=="" &&td.eq(1).val()!="") {
+                            alert("header参数KEY/VALUE必须同时为空或不为空");
+    {#                        td.eq(0).css("border","1px solid orange");#}
+                           td.eq(0).css("border-color", "red");
+
+                        }
+                    if(td.eq(0).val()!="" &&td.eq(1).val()!=""){
+                      header.push({
+                                key: td.eq(0).val(),
+                                value: td.eq(1).val(),
+                                description:td.eq(2).val()
+                            })}
+                        });
+{#                     console.info(header);#}
+
+                var  datatype=[];
+
+                    if($("#applicationjson").length!=0){
+                        datatype.push({
+                                type:"applicationjson"});
+                        if($("#applicationjson").val()==""&&$('#POST').is(':checked')){
+                            alert("请求参数不能为空");
+                        }else {
+                        datatype.push($("#applicationjson").val());
+                        flagedata=1;
+                        console.info(datatype);
+                    }}
+
+                    if($("#urlencoeddata").length!=0){
+                            datatype.push({
+                                type:"urlencoeddata"});
+                        $("table#urlencoeddata tbody  ").find("tr").each(function () {
+                         var td = $(this).find("input");
+                        if(td.eq(0).val()!="" &&td.eq(1).val()=="") {
+                            alert("参数KEY/VALUE必须同时为空或不为空");
+    {#                        td.eq(1).css("border","1px solid orange");#}
+                            td.eq(1).css("border-color", "red");
+
+                        }
+                        if(td.eq(0).val()=="" &&td.eq(1).val()!="") {
+                            alert("参数KEY/VALUE必须同时为空或不为空");
+    {#                        td.eq(0).css("border","1px solid orange");#}
+                           td.eq(0).css("border-color", "red");
+
+                        }
+                        if(td.eq(0).val()!="" &&td.eq(1).val()!="") {
+                          datatype.push({
+                                    key: td.eq(0).val(),
+                                    value: td.eq(1).val(),
+                                    description:td.eq(2).val()
+
+                                });
+                            }
+                        });
+                        if (datatype.length>=2){
+                            flagedata=1
+                            }
+                        if (datatype.length<2&&$('#POST').is(':checked')){
+                            alert("参数不能为空");
+                            flagedata=0;
+                            }
+                }
+
+                    if($("#formdata").length!=0){
+                            datatype.push({
+                                    type:"urlencoeddata"});
+                        $("table#formdata tbody  ").find("tr").each(function () {
+                             var td = $(this).find("input");
+                             if(td.eq(0).val()!="" &&td.eq(1).val()=="") {
+                                alert("参数KEY/VALUE必须同时为空或不为空");
+                            }if(td.eq(0).val()=="" &&td.eq(1).val()!="") {
+                                alert("参数KEY/VALUE必须同时为空或不为空");
+                            }
+
+                            if(td.eq(0).val()!="" &&td.eq(1).val()!="") {
+                                  datatype.push({
+                                            key: td.eq(0).val(),
+                                            value: td.eq(1).val(),
+                                            description:td.eq(2).val()
+
+                                        })
+                                    }
+                            });
+                        if (datatype.length>=2){
+                            flagedata=1
+                            }
+                        if (datatype.length<2&&$('#POST').is(':checked')){
+                            alert("参数不能为空");
+                            flagedata=0;
+
+                            }
+
+                    }
+
+                console.info(datatype);
+
+              if(type=="tijiao"&&flagedata==1&&flageUrl==1){
+                  var finaldata=[];
+                  finaldata.push(url);
+                  finaldata.push(header);
+                   if($('#POST').is(':checked')){
+                finaldata.push(datatype)
+              }
+
+                  var taskstatus=$("input:radio[name='TASK']:checked").val();
+                   if(taskstatus=="YES"){
+                       taskstatus="已启动"
+                   }else {
+                       taskstatus="未启动"
+
+                   }
+                  var  tasktime=$("#tasktime").val();
+                  finaldata.push({"Task_status":taskstatus,"tasktime":tasktime});
+
+                  $.ajax({
+                      type:"POST",
+                      url:"{{ url_for("getotalist") }}",
+                      data:{data: JSON.stringify(finaldata) },
+                      timeout:5000,
+                      dataType: "json",
+{#                      contentType: "application/json",#}
+
+                      success:function (resl) {
+                          alert(resl);
+                      },
+                      error:function () {
+                          alert("error");
+                      }
+                  })
+              }
+              if(type=="ceshi"&&flagedata==1&&flageUrl==1){
+
+                  var finaldata=[];
+                  finaldata.push(url);
+                  finaldata.push(header);
+                  if($('#POST').is(':checked')){
+                finaldata.push(datatype)
+              }
+
+                  $.ajax({
+                      type:"POST",
+                      url:"{{ url_for("ceshi") }}",
+                      data:{data: JSON.stringify(finaldata) },
+                      timeout:5000,
+                      dataType: "json",
+{#                      contentType: "application/json",#}
+
+                      success:function (reslut) {
+                          alert(reslut);
+                          $("#responesdiv").css("display","");
+                          $("#responsedata").val(reslut);
+                      },
+                      error:function () {
+                          alert("error");
+                      }
+                  })
+              }
+
+        }
+
+        $(function () {
+            var data="<table class=\"table table-bordered\">\
+            <thead>\
+                <tr>\
+                    <th>Key</th>\
+                    <th>Value</th>\
+                    <th>&nbsp;	&nbsp;	&nbsp;	&nbsp;	&nbsp;\
+                        <button type=\"button\" class=\"btn btn-info\" id=\"addformdata\">	&nbsp;	添加&nbsp;	</button>&nbsp;&nbsp;	&nbsp;\
+                      <button type=\"button\" class=\"btn btn-info\" id=\"delformdata\">	&nbsp;	删除&nbsp;	</button></th>\
+                </tr>\
+            </thead>\
+            <tbody>\
+            <tr>\
+                <td>  <input type=\"text\" class=\"form-control\" ></td>\
+                <td><input type=\"text\" class=\"form-control\" ></td>\
+                <td><input type=\"text\" class=\"form-control\"  placeholder=\"描述\"></td>\
+            </tr>";
+
+            var json="<textarea id=\"applicationjson\"  class=\"form-control\" style=\"height: 200px\"></textarea>";
+
+            var a="<tr><td><input type=\"text\" class=\"form-control\" ></td>" +
+                    "<td><input type=\"text\" class=\"form-control\" ></td>" +
+                    "<td><input type=\"text\" class=\"form-control\"  placeholder=\"描述\"></td>" +
+              "</tr>";
+
+
+
+
+          $(":radio").click(function(){
+            if($('#GET').is(':checked')) {
+                $("#datatype").hide();
+                 $("#typebutton").hide();
+            }
+            if($('#POST').is(':checked')) {
+                $("#datatype").show();
+                 $("#typebutton").show();
+            }
+          });
+
+
+            $("#data").click(function () {
+                $("#data").addClass("btn-warning");
+                if ($("#applicationjson").length!=0) {
+                    $("#json").removeClass("btn-warning");
+                    $("#applicationjson").remove();}
+
+                  if ($("#urlencoeddata").length!=0) {
+                    $("#urlencoed").removeClass("btn-warning");
+                    $("#urlencoeddata").remove();}
+
+                if ($("#formdata").length==0) {
+                    $("#datatype").append(data);
+                    $("div#datatype table").attr("id", "formdata");
+                }
+
+                $("#addformdata").click(function () {
+                   var row = $("table#formdata tr").length;
+                    if (row<=10) {
+                        $("table#formdata tr:last").after(a);
+                       }else {
+                        alert("一次最多只能添加10个");}
+                            });
+
+                 $("#delformdata").click(function () {
+                    var row = $("table#formdata tr").length;
+                    if (row>=3) {
+                        $("table#formdata tr:last ").remove();
+                    }else {
+                        alert("不能删除了啊");
+                    }
+                });
+
+            });
+
+            $("#urlencoed").click(function () {
+                $("#urlencoed").addClass("btn-warning");
+                if ($("#applicationjson").length!=0) {
+                    $("#json").removeClass("btn-warning");
+                    $("#applicationjson").remove();}
+
+                if ($("#formdata").length!=0) {
+                    $("#data").removeClass("btn-warning");
+                    $("#formdata").remove();}
+
+
+                if ($("#urlencoeddata").length==0) {
+                    $("#datatype").append(data);
+                    $("div#datatype table").attr("id", "urlencoeddata");
+                    $("#addformdata").attr("id","addurldata");
+                    $("#delformdata").attr("id","delurldata");
+                }
+
+                $("#addurldata").click(function () {
+
+                   var row = $("table#urlencoeddata tr").length;
+                    if (row<=10) {
+                        $("table#urlencoeddata tr:last").after(a);}else {
+                        alert("一次最多只能添加10个");}
+                            });
+
+                 $("#delurldata").click(function () {
+                    var row = $("table#urlencoeddata tr").length;
+                    if (row>=3) {
+                        $("table#urlencoeddata tr:last ").remove();
+                    }else {
+                        alert("不能删除了啊");
+                    }
+                });
+            });
+
+
+            $("#json").click(function () {
+
+                $("#json").addClass("btn-warning");
+
+                if ($("#formdata").length!=0) {
+                    $("#data").removeClass("btn-warning")
+                    $("#formdata").remove();}
+
+                if ($("#urlencoeddata").length!=0) {
+                    $("#urlencoed").removeClass("btn-warning");
+                    $("#urlencoeddata").remove();}
+
+                if ($("#applicationjson").length==0) {
+                    $("#datatype").append(json);
+                }
+            });
+
+            $("#addheader").click(function () {
+
+                var row = $("table#header tr").length;
+                if (row<=10) {
+                $("table#header tr:last").after(a);
+            }else {
+                    alert("一次最多只能添加10个");
+                }
+            });
+
+            $("#delheader").click(function () {
+                var row = $("table#header tr").length;
+                if (row>=3) {
+                    $("table#header tr:last ").remove();
+                }else {
+                    alert("不能删除了啊");
+                }
+            });
+
+            
+
+            $("#su").click(function () {
+                datadata("tijiao");
+                       });
+
+            $("#ceshi").click(function () {
+                datadata("ceshi");
+                       });
+
+
+
+            $("#resert").click(function () {
+                  $("input,textarea").val("");
+            });
+
+            $("input").focus(function(){
+                $("input").css("border-color", "");
+             });
+
+          })
+
+
+
+
+
+    </script>
+
+    <title>Title</title>
+</head>
+<body>
+<div style="margin-left: 10px;float: left">
+
+    <div style="width: 700px "><br>
+
+    <label>	&nbsp;请求URl</label><br>
+    <input class="form-control" style="width: 700px" type="text" name="url" id="url">
+    </div><br>
+
+        <div style="width: 700px">
+       <label class="btn btn-primary">请求方式：
+{#        <label class="btn btn-primary">#}
+            <input type="radio" name="options" id="POST" checked value="POST">POST&nbsp;&nbsp;
+{#        </label>#}
+{#        <label class="btn btn-primary">#}
+            <input type="radio" name="options" id="GET"  value="GET"> GET
+        </label>
+    </div><br>
+
+    <div style="width: 700px ">
+    <label >	&nbsp;	Headers</label>
+
+        <table class="table table-bordered" id="header">
+            <thead>
+                <tr>
+                    <th>Key</th>
+                    <th>Value</th>
+                    <th>&nbsp;	&nbsp;	&nbsp;	&nbsp;	&nbsp;
+                       <button type="button" class="btn btn-info" id="addheader">	&nbsp;	添加&nbsp;	</button>&nbsp;&nbsp;	&nbsp;
+                      <button type="button" class="btn btn-info" id="delheader">	&nbsp;	删除&nbsp;	</button></th>
+                </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>  <input type="text" class="form-control" ></td>
+                <td><input type="text" class="form-control" ></td>
+                <td><input type="text" class="form-control"  placeholder="描述"></td>
+            </tr>
+            <tr>
+                    <td>  <input type="text" class="form-control" ></td>
+                    <td><input type="text" class="form-control" ></td>
+                    <td><input type="text" class="form-control"  placeholder="描述"></td>
+            </tr>
+            </tbody>
+         </table>
+    </div>
+
+
+
+
+
+    <div style="width: 700px" id="typebutton">
+       <button type="button" class="btn  btn-default " id="data">&nbsp;&nbsp;&nbsp;&nbsp;form-data&nbsp;&nbsp;&nbsp;&nbsp;</button>
+	    <button type="button" class="btn btn-default" id="urlencoed">form-urlencoed</button>
+	    <button type="button" class="btn btn-default btn-warning" id="json">application/json</button>
+
+
+    </div >
+    <div style="width: 700px" id="datatype">
+        <textarea id="applicationjson"  class="form-control" style="height: 200px"></textarea>
+    </div>
+    <div style="width: 700px"><br>
+              <label class="btn btn-primary">是否启动调度任务：
+{#        <label class="btn btn-primary">#}
+            <input type="radio" name="TASK" id="TASK" checked value="YES">是&nbsp;&nbsp;
+{#        </label>#}
+{#        <label class="btn btn-primary">#}
+            <input type="radio" name="TASK" id="TASK"  value="NO">否
+
+        </label >
+        <label class="btn btn-primary" >调度任务时间隔：
+            <input  class="form-control" type="text" id="tasktime">
+
+        </label>
+
+    </div>
+    <div style="width: 700px"><br>
+        <button type="button" class="btn btn-default" id="su">&nbsp;提交&nbsp;</button>&nbsp;&nbsp;
+        <button type="button" class="btn btn-default" id="resert">&nbsp;重置&nbsp;</button>&nbsp;&nbsp;
+        <button type="button" class="btn btn-default" id="ceshi">&nbsp;测试&nbsp;</button>&nbsp;&nbsp;
+
+    </div>
+
+
+</div>
+
+<div style="margin-left: 50px;float:left;display:none" id="responesdiv">
+<div style="width: 700px "><br>
+
+    <label>	响应结果</label><br>
+<textarea class="form-control"  style="width: 792px; margin: 0px -90px 0px 0px; height: 538px;" id="responsedata" >00009090</textarea>    </div><br>
+</div>
+
+</body>
+</html>

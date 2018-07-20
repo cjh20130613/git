@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link href="http://cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href={{ url_for("static",filename="css/htmleaf-demo.css") }}>
+	<link rel="stylesheet" href={{ url_for("static",filename="css/signin.css")}}>
+
+    <script src="{{url_for('static', filename='jq.js')}}"></script>
+    <script type="text/javascript">
+        $(function () {
+            var respones=$("#respones").text();
+            alert(respones);
+            if (respones!=""){
+                $('#respones').css('display','block');
+            }
+            $("#commfit").click(function () {
+                var r=1;
+                var list = [];
+                $("input[type='text']").each(function (i) {
+                    list.push($(this).val());
+                    })
+            });
+            })
+
+    </script>
+</head>
+<body>
+	<div class="htmleaf-container">
+		<header class="htmleaf-header">
+		</header>
+		<div class="signin" >
+			<div class="signin-head"><img src={{ url_for("static",filename="images/test/head_120.png")}} alt="" class="img-circle"></div>
+			<form class="form-signin" role="form" id="loginForm"  action="{{ url_for("registercommit")   }}" method="get">
+                    <div class="input-group">
+                        <input style="margin-left: 20px"type="text" class="form-control" name="user" placeholder="请输入用户名">
+
+                    </div>
+                    <div class="input-group">
+                        <input style="margin-left: 20px"type="text" class="form-control" name="password" placeholder="请输入密码">
+
+                    </div>
+                    <div class="input-group">
+                         <input style="margin-left: 20px" type="text" class="form-control" name="passcommfit" placeholder="请确认密码">
+
+                    </div>
+                    <button id="commfit" style="width: 267px;margin-left: 20px" class="btn  btn-info btn-block" >提交</button>
+
+			</form>
+
+                <span  id="respones" style="display: none;margin-left: 30px">{{respones}}</span>
+
+			</div>
+
+	</div>
+</body>
+</html>

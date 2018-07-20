@@ -1,0 +1,64 @@
+{% extends "bootstrap/base.html" %}
+
+{% block title %}Flasky{% endblock %}
+
+{% block navbar %}
+<div class="navbar navbar-inverse" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Flasky</a>
+        </div>
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li><a href="/">Home</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<div>
+<form id="loginForm">
+    	<table>
+    	<tr>
+                <td>用户名：</td>
+                <td>
+                	<input type="text" id="login" name="login" placeholder="请输入用户名">
+                </td>
+            </tr>
+            <tr>
+                <td>密码：</td>
+                <td><input type="password" id="password" name="password" placeholder="请输入密码" autocomplete="off" onblur="md5()"></td>
+            </tr>
+    	</table>
+    </form>
+
+
+    <form id="checkbox">
+        <label>
+            <input type="checkbox" name="newsletter" checked="checked" value="Daily"/>
+            <span>Daily</span>
+        </label>
+        <label>
+        <input type="checkbox" name="newsletter" value="Weekly" />
+        <span>Weekly</span>
+        </label>
+        <label>
+        <input type="checkbox" name="newsletter" checked="checked" value="Monthly" />
+        <span>Monthly</span>
+        </label>
+</form>
+
+    <button  id="test1" type="submit" value="提交">提交 </button>
+    <span>{{ username }}</span>
+    <a>这是yyy.html页面</a>
+
+</div>
+{% endblock %}
